@@ -43,7 +43,7 @@ const mk = async (settings, { offline = false } = {}) => {
     userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36' });
   if (!process.env.URL) await ctx.route('https://pulse.test/**', fromDisk);
   await ctx.addInitScript(STUBS);
-  if (settings) await ctx.addInitScript(`try{ if(!localStorage.getItem('pulse.settings.v1')) localStorage.setItem('pulse.settings.v1', ${JSON.stringify(JSON.stringify(settings))}); }catch{}`);
+  if (settings) await ctx.addInitScript(`try{ if(!localStorage.getItem('pulse.settings.v1')) localStorage.setItem('pulse.settings.v1', ${JSON.stringify(JSON.stringify({ v: 2, cueStyle: 'voice', ...settings }))}); }catch{}`);
   const page = await ctx.newPage(); const errors = [];
   page.on('pageerror', (e) => errors.push(String(e))); page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
   await page.goto(URL_); await page.waitForSelector('.pill');
@@ -147,6 +147,23 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await b.page.waitForSelector('#done'); ok('completion screen after the last interval', true);
   ok('completion beeps (ascending pattern)', (await b.page.evaluate(() => window.__beeps.slice(-3))).join(',') === '880,1100,1320');
   await shot(b.page, '08-complete'); await b.page.click('#done'); await b.page.waitForSelector('#start'); await b.ctx.close();
+}
+
+// ───────────── defaults: a fresh visit uses beeps; an old saved "voice" is migrated; a deliberate choice is kept ─────────────
+{
+  const fresh = await mk(null);
+  await fresh.page.click('[data-mode="TABATA"]'); await fresh.page.waitForSelector('#cue-style');
+  ok('fresh visit: Beeps is the default cue sound', (await fresh.page.getAttribute('#cue-style button[data-v="beeps"]', 'aria-pressed')) === 'true');
+  await fresh.page.click('#cue-style button[data-v="voice"]');
+  await fresh.page.reload(); await fresh.page.waitForSelector('.pill'); await fresh.page.click('[data-mode="TABATA"]'); await fresh.page.waitForSelector('#cue-style');
+  ok('choosing Voice is remembered after a reload', (await fresh.page.getAttribute('#cue-style button[data-v="voice"]', 'aria-pressed')) === 'true');
+  await fresh.ctx.close();
+  const old = await mk(null);
+  await old.page.evaluate(() => localStorage.setItem('pulse.settings.v1', JSON.stringify({ cueStyle: 'voice', prepDuration: 3 }))); // saved by the previous version
+  await old.page.reload(); await old.page.waitForSelector('.pill'); await old.page.click('[data-mode="TABATA"]'); await old.page.waitForSelector('#cue-style');
+  ok('settings saved before the change are migrated to beeps (other settings kept)', (await old.page.getAttribute('#cue-style button[data-v="beeps"]', 'aria-pressed')) === 'true'
+    && (await old.page.evaluate(() => JSON.parse(localStorage.getItem('pulse.settings.v1') || '{}').prepDuration ?? 3)) === 3);
+  await old.ctx.close();
 }
 
 // ───────────── every mode has its own face; FOR TIME counts up ─────────────

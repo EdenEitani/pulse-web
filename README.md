@@ -12,13 +12,13 @@ On iPhone: Safari → Share → **Add to Home Screen**.
 
 ## What's in it
 AMRAP · FOR TIME · EMOM · TABATA · MIX builder (reorder, duplicate, delete) · mode-specific timer faces ·
-voice announcements or classic HIIT beeps · 183 built-in exercises, import by comma/new line, one-tap Clear all with Undo ·
+classic HIIT beeps (default) or voice announcements · 183 built-in exercises, import by comma/new line, one-tap Clear all with Undo ·
 saved workouts · everything stored on the phone (localStorage).
 
 - **Voice:** each exercise is spoken in the language it's written in; the connecting phrases follow the first exercise
   (Hebrew → Hebrew phrases, anything else → English). It uses the phone's text-to-speech voices — install a voice for any
   language you use (Android: Settings → System → Languages → Text-to-speech).
-- **Beeps:** 3 short beeps for 3·2·1, a longer higher beep on GO, a lower beep when rest starts, a finish pattern.
+- **Beeps (the default):** 3 short beeps for 3·2·1, a longer higher beep on GO, a lower beep when rest starts, a finish pattern.
 
 ## Differences from the iPhone app
 | iPhone | Web |

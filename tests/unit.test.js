@@ -7,6 +7,19 @@ import { parse, clean, key, ExerciseStore, DEFAULTS } from '../js/exercises.js';
 import { Storage } from '../js/storage.js';
 import { TONES } from '../js/beeps.js';
 
+import { loadSettings, saveSettings, DEFAULT_SETTINGS, storage } from '../js/storage.js';
+
+// ───── default cue sound ─────
+test('beeps are the default cue sound; old saved "voice" is migrated once; a later choice is kept', () => {
+  storage.remove('pulse.settings.v1');
+  assert.equal(loadSettings().cueStyle, 'beeps'); assert.equal(DEFAULT_SETTINGS.cueStyle, 'beeps');
+  storage.setJSON('pulse.settings.v1', { cueStyle: 'voice', prepDuration: 3 });        // written by the previous version (no `v`)
+  const migrated = loadSettings(); assert.equal(migrated.cueStyle, 'beeps'); assert.equal(migrated.prepDuration, 3);
+  saveSettings({ ...migrated, cueStyle: 'voice' });                                     // the user now chooses voice on purpose
+  assert.equal(loadSettings().cueStyle, 'voice'); assert.equal(loadSettings().prepDuration, 3);
+  storage.remove('pulse.settings.v1');
+});
+
 // ───── helpers ─────
 const mem = () => new Storage(null);
 class Clock { constructor() { this.t = 1000; } now = () => this.t; advance(s) { this.t += s; } }
