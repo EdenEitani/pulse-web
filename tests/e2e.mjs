@@ -65,7 +65,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   if (REAL) {
   const cdp = await ctx.newCDPSession(page); await cdp.send('Page.enable');
   const inst = await cdp.send('Page.getInstallabilityErrors');
-  ok('Chrome reports no installability errors', inst.installabilityErrors.length === 0, JSON.stringify(inst.installabilityErrors));
+  // The test browser is an incognito-style context, where Chrome never offers installs: that one reason is expected.
+  const instErrors = inst.installabilityErrors.filter((e) => e.errorId !== 'in-incognito');
+  ok('Chrome reports no installability errors', instErrors.length === 0, JSON.stringify(instErrors));
   const swState = await page.evaluate(async () => { const r = await navigator.serviceWorker.ready; return !!r.active; });
   ok('service worker active', swState);
   await page.reload(); await page.waitForSelector('.pill'); await sleep(800);
