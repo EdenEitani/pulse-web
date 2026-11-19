@@ -1,0 +1,11 @@
+{
+  "name": "pulse-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pulse – workout interval timer (installable web app)",
+  "scripts": {
+    "test": "node --test tests/unit.test.js tests/pwa.test.js",
+    "serve": "python3 -m http.server 8080"
+  }
+}
