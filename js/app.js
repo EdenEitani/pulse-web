@@ -56,7 +56,8 @@ function homeScreen() {
     h('h1', null, 'Every second', h('br'), 'counts.'),
     h('p', { class: 'sub' }, 'One timer. Endless ways to move.', h('br'), 'Build your workout, then just follow the flow.'),
     h('div', { class: 'pills' }, MODES.map(pill)),
-    h('p', { class: 'footnote' }, '100% free · Offline · Voice-guided'));
+    h('p', { class: 'footnote' }, '100% free · Offline · Voice-guided'),
+    h('a', { class: 'coffee-small', id: 'buy-coffee-home', href: 'https://buymeacoffee.com/eden6454o', target: '_blank', rel: 'noopener noreferrer' }, '☕ Support Pulse'));
 }
 
 function openBuilder(mode) {
@@ -400,6 +401,8 @@ function settingsScreen() {
     toggleSwitch('Vibration at interval changes', st.haptics, (v) => set({ haptics: v })),
     numberField('Preparation countdown', st.prepDuration, { min: 0, max: 60, step: 5, unit: 'seconds', onChange: (v) => set({ prepDuration: v }) }),
     install,
+    field('Support Pulse', h('p', { class: 'help', style: { margin: '0 0 10px', fontSize: '14px', color: 'var(--muted)' } }, 'Pulse is free, with no ads and no account. If it helps your training, you can buy me a coffee.'),
+      h('a', { class: 'coffee-btn', id: 'buy-coffee', href: 'https://buymeacoffee.com/eden6454o', target: '_blank', rel: 'noopener noreferrer' }, '☕ Buy me a coffee')),
     h('p', { class: 'help muted', style: { fontSize: '12px', lineHeight: 1.6, marginTop: '10px' } },
       'Keep the screen on while training: Pulse asks your phone to stay awake during a workout. Voices come from your phone, so install a voice for any language you use (Android: Settings → System → Languages → Text-to-speech).'));
 }
