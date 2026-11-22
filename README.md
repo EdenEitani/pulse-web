@@ -23,7 +23,7 @@ saved workouts · everything stored on the phone (localStorage).
 ## Differences from the iPhone app
 | iPhone | Web |
 |---|---|
-| Runs with the screen locked | **Keeps the screen on** during a workout (Screen Wake Lock). A lock-screen media notification (title, pause/skip) is offered where Chrome allows it. |
+| Runs with the screen locked | **Keeps the screen on** during a workout (Screen Wake Lock). Pulse plays no background media, so your own music keeps playing and only dips briefly under each beep. |
 | Live Activity / Dynamic Island | Not available on the web |
 | Local-notification fallback | Not reliable on the web — not included |
 | Voices from iOS | Voices from the phone; quality/availability varies |
@@ -46,5 +46,5 @@ When you change any file, bump `VERSION` in `sw.js` so installed copies refresh.
 
 ## Layout
 `js/model.js` plan compiler · `js/engine.js` timing engine (monotonic clock, UI-independent) · `js/speech.js` language + TTS ·
-`js/beeps.js` Web Audio tones · `js/exercises.js` list + import parsing · `js/storage.js` · `js/lockscreen.js` wake lock + media session ·
+`js/beeps.js` Web Audio tones · `js/exercises.js` list + import parsing · `js/storage.js` · `js/lockscreen.js` wake lock only (no media session, so music is not interrupted) ·
 `js/app.js` + `js/ui.js` screens · `sw.js` offline cache · `manifest.webmanifest`.

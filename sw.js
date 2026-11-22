@@ -1,5 +1,5 @@
 // Service worker: makes Pulse installable and fully offline. Bump VERSION whenever the files change.
-const VERSION = 'pulse-v1.0.2';
+const VERSION = 'pulse-v1.0.3';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css',
   'js/app.js', 'js/model.js', 'js/engine.js', 'js/speech.js', 'js/beeps.js', 'js/exercises.js', 'js/exercise-defaults.js',
