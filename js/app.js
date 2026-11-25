@@ -396,6 +396,7 @@ function settingsScreen() {
     field('Cue sound', segmented([['voice', 'Voice'], ['beeps', 'Beeps']], st.cueStyle, (v) => { set({ cueStyle: v }); render(); }, 'cue-style-settings'),
       h('div', { class: 'help' }, st.cueStyle === 'voice' ? 'Spoken countdown and exercise names.' : 'Three short beeps for 3 · 2 · 1, one longer high beep on GO, a lower beep when rest starts.'),
       h('button', { class: 'btn-outline', id: 'play-sample', onClick: () => (st.cueStyle === 'beeps' ? beeper.sample() : speaker.speak([{ text: 'First exercise: Squats', lang: 'en-US' }], st.voiceRate)) }, icon('speaker'), st.cueStyle === 'beeps' ? 'Play sample' : 'Test voice')),
+    toggleSwitch('"Halfway there" cue in each interval', st.halfway, (v) => set({ halfway: v })),
     toggleSwitch('Final 3-second countdown', st.countdown, (v) => set({ countdown: v })),
     toggleSwitch('Announce upcoming exercise during rest', st.announceNext, (v) => set({ announceNext: v })),
     toggleSwitch('Vibration at interval changes', st.haptics, (v) => set({ haptics: v })),

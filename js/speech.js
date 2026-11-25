@@ -61,6 +61,7 @@ export function segments(plan, index, language, announceNext = true) {
   }
 }
 export const textOf = (segs) => segs.map((s) => s.text).join('');
+export const halfwayText = (he) => (he ? 'חצי הדרך' : 'Halfway there');
 export const completeText = (he) => (he ? 'האימון הסתיים' : 'Workout complete');
 
 /** speechSynthesis wrapper. Utterances queue in order; each picks the best installed voice for its language. */

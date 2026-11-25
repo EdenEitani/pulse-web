@@ -13,7 +13,7 @@ export { Storage };
 
 // v: 2 = beeps became the default cue sound. Settings saved before that (no `v`) stored the old default ("voice") without the
 // user ever choosing it, so their cueStyle is dropped once and they get beeps; every later choice is kept.
-export const DEFAULT_SETTINGS = { v: 2, cueStyle: 'beeps', countdown: true, announceNext: true, haptics: true, prepDuration: 5, voiceRate: 1 };
+export const DEFAULT_SETTINGS = { v: 2, cueStyle: 'beeps', countdown: true, halfway: true, announceNext: true, haptics: true, prepDuration: 5, voiceRate: 1 };
 
 export function loadSettings() {
   const saved = storage.getJSON('pulse.settings.v1', {}) || {};

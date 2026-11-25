@@ -149,3 +149,26 @@ test('exercise store: persistence, merge/replace, remove/reset, no writes until 
   s.remove('b'); assert.deepEqual(s.list, ['A', 'C']); s.reset(); assert.ok(new ExerciseStore(st).isDefault);
   s.replace(['banana', 'Apple', 'cherry', 'apple2']); assert.deepEqual(s.sorted, ['Apple', 'apple2', 'banana', 'cherry']);
 });
+
+// ───── halfway cue ─────
+test('halfway cue: beeps and voice, once per interval, not in get-ready or short intervals', () => {
+  const b = rig(tabata({ work: 20, rest: 10, rounds: 1 }), settings({ cueStyle: 'beeps', halfway: true, prepDuration: 5 }));
+  b.e.start(); assert.deepEqual(b.be.played, []);
+  for (let i = 0; i < 60; i++) { b.c.advance(0.1); b.e.tick(); }          // 6 s: get-ready (5 s) is over, GO beeped, no halfway in get-ready
+  assert.deepEqual(b.be.played, ['go']);
+  for (let i = 0; i < 100; i++) { b.c.advance(0.1); b.e.tick(); }         // 16 s: past 10 s of the 20 s work
+  assert.deepEqual(b.be.played, ['go', 'halfway']);
+  for (let i = 0; i < 40; i++) { b.c.advance(0.1); b.e.tick(); }
+  assert.equal(b.be.played.filter((k) => k === 'halfway').length, 1);
+  const v = rig(tabata({ work: 20, rest: 10, rounds: 1, exercises: ['Squats'] }), settings({ halfway: true }));
+  v.e.start(); for (let i = 0; i < 105; i++) { v.c.advance(0.1); v.e.tick(); }
+  assert.deepEqual(v.sp.spoken, ['Squats', 'Halfway there']);
+  const short = rig(tabata({ work: 8, rest: 5, rounds: 1 }), settings({ cueStyle: 'beeps', halfway: true })); short.e.start();
+  for (let i = 0; i < 70; i++) { short.c.advance(0.1); short.e.tick(); }
+  assert.ok(!short.be.played.includes('halfway'));
+  const off = rig(tabata({ work: 20, rounds: 1 }), settings({ cueStyle: 'beeps', halfway: false })); off.e.start();
+  for (let i = 0; i < 120; i++) { off.c.advance(0.1); off.e.tick(); }
+  assert.ok(!off.be.played.includes('halfway'));
+  assert.ok(TONES.halfway.length === 2 && TONES.halfway[0][0] !== TONES.countdown[0][0]);
+  assert.equal(DEFAULT_SETTINGS.halfway, true);
+});

@@ -5,6 +5,7 @@ export const TONES = {
   countdown: [[880, 0.14, 0]],
   go: [[1320, 0.70, 0]],
   rest: [[587, 0.45, 0]],
+  halfway: [[660, 0.09, 0], [990, 0.12, 0.13]],   // two quick rising notes: unlike the single 3·2·1 beep
   complete: [[880, 0.14, 0], [1100, 0.14, 0.22], [1320, 0.70, 0.44]],
 };
 

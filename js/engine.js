@@ -1,7 +1,7 @@
 // Workout engine: monotonic clock, UI-independent (port of the iPhone app's WorkoutEngine).
 // Views only READ snapshot(), so correctness doesn't depend on frame rate, throttled timers or re-renders.
 import { compile } from './model.js';
-import { segments, workoutLanguage, completeText, primary } from './speech.js';
+import { segments, workoutLanguage, completeText, halfwayText, primary } from './speech.js';
 
 export class Engine {
   /**
@@ -68,7 +68,19 @@ export class Engine {
       this.index += 1; this.accumulated = el - d; this.resumedAt = t; landed = true;
     }
     if (landed) { this.spoken.clear(); this.#announce(); this.#haptic([40]); this.onEvent('intervalChanged'); }
-    this.#countdown(this.#elapsed(t));
+    const el = this.#elapsed(t);
+    this.#halfway(el);
+    this.#countdown(el);
+  }
+
+  /** One "halfway there" cue per interval (not the get-ready phase, and only when the interval is long enough not to crowd the 3·2·1). */
+  #halfway(el) {
+    if (!this.settings.halfway) return;
+    const c = this.current, d = c.duration;
+    if (c.kind === 'prepare' || d < 10 || this.spoken.has('half') || el < d / 2) return;
+    this.spoken.add('half');
+    if (d - el < 3) return; // we resumed or jumped past the middle: don't announce late
+    if (this.settings.cueStyle === 'voice') this.#say(halfwayText(this.isHebrew)); else this.#beep('halfway');
   }
 
   #countdown(el) {
