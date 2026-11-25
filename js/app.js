@@ -432,6 +432,14 @@ window.addEventListener('popstate', () => {
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  // A new version took over: reload once so the user runs it right away (never in the middle of a workout).
+  if (navigator.serviceWorker.controller) {
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (reloaded || S.engine || S.route === 'timer') return;
+      reloaded = true; location.reload();
+    });
+  }
 }
 
 window.__pulse = { S, render }; // handy for tests/debugging
