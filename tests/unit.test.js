@@ -27,7 +27,7 @@ class FakeSpeaker { spoken = []; segs = []; stops = 0; activate() {} speak(s) { 
 class FakeBeeper { played = []; activate() {} play(k) { this.played.push(k); } stop() {} }
 const settings = (o = {}) => ({ prepDuration: 0, cueStyle: 'voice', countdown: false, announceNext: true, haptics: false, voiceRate: 1, ...o });
 const tabata = (o = {}) => { const b = { ...makeBlock('TABATA'), work: 20, rest: 10, rounds: 3, sets: 1, setRest: 60, exercises: ['A', 'B'], ...o }; return { id: 'w', name: 't', mode: 'TABATA', blocks: [b] }; };
-const rig = (w, s = settings(), extra = {}) => { const c = new Clock(), sp = new FakeSpeaker(), be = new FakeBeeper(); const e = new Engine(w, s, { speaker: sp, beeper: be, clock: c.now, autoTick: false, device: 'en-US', ...extra }); return { c, sp, be, e }; };
+const rig = (w, s = settings(), extra = {}) => { const c = new Clock(), sp = new FakeSpeaker(), be = new FakeBeeper(); const e = new Engine(w, s, { speaker: sp, beeper: be, clock: c.now, autoTick: false, device: 'en-US', celebrateDelay: 0, ...extra }); return { c, sp, be, e }; };
 
 // ───── plan & durations ─────
 test('tabata plan shape and builder total equals compiled plan', () => {
@@ -82,10 +82,10 @@ test('3-2-1 countdown is spoken once per number', () => {
   assert.deepEqual(sp.spoken, ['A', '3', '2', '1']);
 });
 test('prepare interval previews the first exercise; result excludes prepare', () => {
-  const { c, e, sp } = rig(tabata({ work: 10, rounds: 1 }), settings({ prepDuration: 5 }));
+  const { c, e, sp, be } = rig(tabata({ work: 10, rounds: 1 }), settings({ prepDuration: 5 }));
   e.start(); assert.deepEqual(sp.spoken, ['Get ready. First exercise: A']);
   c.advance(5.1); e.tick(); assert.equal(e.current.kind, 'work'); assert.equal(sp.spoken.at(-1), 'A');
-  c.advance(10); e.tick(); assert.ok(e.finished); assert.ok(Math.abs(e.result.time - 10) < 1e-6); assert.equal(sp.spoken.at(-1), 'Workout complete');
+  c.advance(10); e.tick(); assert.ok(e.finished); assert.ok(Math.abs(e.result.time - 10) < 1e-6); assert.equal(sp.spoken.at(-1), 'Well done!'); assert.equal(be.played.at(-1), 'complete');
 });
 test('skip forward/back and FOR TIME counting up with finish early', () => {
   const { c, e } = rig(tabata({ rounds: 3 })); e.start(); e.skipForward(); assert.equal(e.index, 1);

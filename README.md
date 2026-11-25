@@ -18,7 +18,7 @@ saved workouts · everything stored on the phone (localStorage).
 - **Voice:** each exercise is spoken in the language it's written in; the connecting phrases follow the first exercise
   (Hebrew → Hebrew phrases, anything else → English). It uses the phone's text-to-speech voices — install a voice for any
   language you use (Android: Settings → System → Languages → Text-to-speech).
-- **Beeps (the default):** 3 short beeps for 3·2·1, two rising notes (or "Halfway there" in voice mode) at the middle of each interval of 10 s or more (can be turned off in Settings), a longer higher beep on GO, a lower beep when rest starts, a finish pattern.
+- **Beeps (the default):** 3 short beeps for 3·2·1, two rising notes (or "Halfway there" in voice mode) at the middle of each interval of 10 s or more (can be turned off in Settings), a longer higher beep on GO, a lower beep when rest starts, a celebration fanfare at the end (plus "Well done!" in voice mode).
 
 ## Differences from the iPhone app
 | iPhone | Web |

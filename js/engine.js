@@ -1,7 +1,7 @@
 // Workout engine: monotonic clock, UI-independent (port of the iPhone app's WorkoutEngine).
 // Views only READ snapshot(), so correctness doesn't depend on frame rate, throttled timers or re-renders.
 import { compile } from './model.js';
-import { segments, workoutLanguage, completeText, halfwayText, primary } from './speech.js';
+import { segments, workoutLanguage, halfwayText, wellDoneText, primary } from './speech.js';
 
 export class Engine {
   /**
@@ -15,6 +15,7 @@ export class Engine {
     this.clock = io.clock || (() => performance.now() / 1000);
     this.onEvent = io.onEvent || (() => {});
     this.autoTick = io.autoTick !== false;
+    this.celebrateDelay = io.celebrateDelay ?? 1.2; // seconds between the fanfare and "Well done!"
     this.plan = compile(workout, settings.prepDuration);
     this.language = workoutLanguage(this.plan, io.device);
     let run = 0; this.offsets = this.plan.map((i) => { const o = run; run += i.duration; return o; });
@@ -125,7 +126,11 @@ export class Engine {
     if (this.timer) clearInterval(this.timer); this.timer = null;
     this.result = { time: Math.max(0, position - this.prepareDuration), completedFully: natural };
     this.finished = true; this.paused = false; this.resumedAt = null;
-    if (this.settings.cueStyle === 'voice') this.#say(completeText(this.isHebrew)); else this.#beep('complete');
+    this.#beep('complete'); // celebration fanfare in both styles
+    if (this.settings.cueStyle === 'voice') {
+      const text = wellDoneText(this.isHebrew);
+      if (this.celebrateDelay > 0) setTimeout(() => this.#say(text), this.celebrateDelay * 1000); else this.#say(text);
+    }
     this.#haptic([80, 60, 80]);
     this.onEvent('finished');
   }

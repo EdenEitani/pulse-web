@@ -1,12 +1,12 @@
 // Classic HIIT beeps synthesised with Web Audio (no audio files).
-// countdown = short high beep (3·2·1) · go = longer, higher · rest = lower · complete = 3 rising notes.
+// countdown = short high beep (3·2·1) · go = longer, higher · rest = lower · complete = celebration fanfare (rising arpeggio + bright held note).
 
 export const TONES = {
   countdown: [[880, 0.14, 0]],
   go: [[1320, 0.70, 0]],
   rest: [[587, 0.45, 0]],
   halfway: [[660, 0.09, 0], [990, 0.12, 0.13]],   // two quick rising notes: unlike the single 3·2·1 beep
-  complete: [[880, 0.14, 0], [1100, 0.14, 0.22], [1320, 0.70, 0.44]],
+  complete: [[523, 0.10, 0], [659, 0.10, 0.11], [784, 0.10, 0.22], [1047, 0.10, 0.33], [1047, 0.14, 0.50], [1319, 0.70, 0.64]],
 };
 
 export class Beeper {

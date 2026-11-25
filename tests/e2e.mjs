@@ -145,7 +145,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   // finish the whole workout by skipping → completion screen
   for (let i = 0; i < 20 && (await b.page.locator('#done').count()) === 0; i++) { await b.page.click('button[aria-label="Skip interval"]').catch(() => {}); await sleep(80); }
   await b.page.waitForSelector('#done'); ok('completion screen after the last interval', true);
-  ok('completion beeps (ascending pattern)', (await b.page.evaluate(() => window.__beeps.slice(-3))).join(',') === '880,1100,1320');
+  ok('completion fanfare (rising arpeggio ending on the highest note)', (await b.page.evaluate(() => window.__beeps.slice(-6))).join(',') === '523,659,784,1047,1047,1319');
   await shot(b.page, '08-complete'); await b.page.click('#done'); await b.page.waitForSelector('#start'); await b.ctx.close();
 }
 
